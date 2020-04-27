@@ -2,6 +2,10 @@ import csv
 
 from Clase_Email import Email 
 
+import re
+
+
+
 if __name__=='__main__':
 #---------------------------------------------------Ingreso de datos--------------------------    
     nombre=input("Ingrese su nombre: \n")
@@ -14,8 +18,8 @@ if __name__=='__main__':
     a=True
     while a:
         if(contr==reing):
-            mail=Email(nomCuenta,dominio,tipo,contr)
-            print ("Estimado "+ nombre +", te enviaremos tus mensajes a la direccion " + mail.retornaEmail()) #--- Muestra mensaje solicitado ---
+            mail = Email(nomCuenta,dominio,tipo,contr)
+            print ("Estimado "+ nombre +", te enviaremos tus mensajes a la direccion " + mail.retornaEmail())       #--- Muestra mensaje solicitado ---
             a=False
         else:
             print ("Contraseña Incorrecta, reingrese su contraseña.")
@@ -25,35 +29,29 @@ if __name__=='__main__':
 
 
 #-------------------------------Menú para opciones de incisos 2 al 4 -------------------------------------------    
-    print ("1. Modificar Contraseña.")
-    print ("2. Mostrar datos de correo por separado.")
-    print ("3. Leer Datos desde archivo.")
-    print ("4. Salir")
-    opcion=int(input("Elige una opcion: "))
-     
-    while(opcion != 4):
-        #-----------------------Opcion 1 -------------------------------
-        if opcion == 1:
-            a=True
-            actual=input("Ingrese su contraseña actual: ")
-            while a:
-                if(actual==mail.getContraseña()):
-                    nueva=input("Ingrese la contraseña nueva: ")
-                    nueva2=input("Reingrese la contraseña: ")
-                    if nueva==nueva2:
-                        mail.setContraseña(nueva2)
-                        a=False
-                        print("La contraseña se estableció Correctamente.")
-                    else:
-                        print("Las contraseñas no coinciden.")
-                else:
-                    print ("Contraseña Incorrecta, reingrese su contraseña.")
-                    actual=input("Ingrese su contraseña actual: ")
-        #------------------------Opcion 2 -------------------------------
-        elif opcion == 2:
-            email=Email("","","","")
-            correo=input("Ingrese su correo elecronico: \n")
+    def opcion4():
+        pass
+
+    def opcion3():
+        archivo=open('Correos.csv')
+        reader = csv.reader(archivo,delimiter=';')
+        domi=input("Ingrese el dominio a saber la cantidad: ")
+        cont=0
+        for fila in reader:
+            if(str(fila[1]) == domi):
+                cont+=1
+        print("La cantidad de correos con dominio " + domi + " es: " + str(cont))
+        archivo.close()
+
+
+    def opcion2():
+        email=Email("","","","")
+        correo=input("Ingrese su correo elecronico: \n")
+
+        if re.match('^[(a-z0-9\_\-\.)]+@[(a-z0-9\_\-\.)]+\.[(a-z)]{2,15}$',correo.lower()):     # ----- Verifica correctitud de correo, si es correcto crea instancia y muestra datos 
+            print("Correo correcto")
             email.crearCuenta(correo)
+
             """
             #------------------------------ En caso de requerir ingresar una contraseña ------------------------------
             contr=input("Ingrese su contraseña: \n")
@@ -70,25 +68,49 @@ if __name__=='__main__':
                     reing=input("Reingrese su contraseña: \n")
             """
             email.MostrarDatos()
+        else:
+            print ("Correo incorrecto")
 
-        #------------------------Opcion 3 -------------------------------
-        elif opcion == 3:
-            archivo=open('Correos.csv')
-            reader = csv.reader(archivo,delimiter=';')
-            domi=input("Ingrese el dominio a saber la cantidad: ")
-            cont=0
-            for fila in reader:
-                if(str(fila[1]) == domi):
-                    cont+=1
-            print("La cantidad de correos con dominio " + domi + " es: " + str(cont))
-            archivo.close()
+    
+    def opcion1():
+        a=True
+        actual=input("Ingrese su contraseña actual: ")
+        while a:
+            if(actual==mail.getContraseña()):
+                nueva=input("Ingrese la contraseña nueva: ")
+                nueva2=input("Reingrese la contraseña: ")
+                if nueva==nueva2:
+                    mail.setContraseña(nueva2)
+                    a=False
+                    print("La contraseña se estableció Correctamente.")
+                else:
+                    print("Las contraseñas no coinciden.")
+            else:
+                print ("Contraseña Incorrecta, reingrese su contraseña.")
+                actual=input("Ingrese su contraseña actual: ")
 
+    switcher ={
+        1: opcion1,
+        2: opcion2,
+        3: opcion3,
+        4: opcion4
+    }
+    def switch(argument):
+        func=switcher.get(argument,lambda:print('Opcion Incorrecta'))
+        func()
+
+    bandera=False
+     
+    while not bandera:
+        print ("")
         print ("1. Modificar Contraseña.")
-        print ("2. Mostrar datos de correo por separado.")
+        print ("2. Mostrar datos por separado de un correo.")
         print ("3. Leer Datos desde archivo.")
         print ("4. Salir")
         opcion=int(input("Elige una opcion: "))
+        switch(opcion)
+        bandera= int(opcion)==4
+ 
 
     input("Presione Enter para continuar...")
-
 
