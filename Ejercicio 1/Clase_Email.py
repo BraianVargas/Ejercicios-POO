@@ -1,3 +1,5 @@
+import re
+
 class Email:
     __idCuenta=0
     __dominio=""
@@ -8,7 +10,7 @@ class Email:
         self.__idCuenta=id
         self.__dominio=dominio
         self.__TipoDominio=TipoDominio
-        self.__Contraseña=Contraseña        
+        self.__Contraseña=Contraseña
     
 #--------------Métodos get y set------------------------
     def setID(self,i):
@@ -44,3 +46,9 @@ class Email:
         self.__dominio=domi[0]
         self.__TipoDominio=domi[1]
 
+    def creaMail(self,id,dominio,TipoDominio,Contraseña):
+        self.__idCuenta=id
+        self.__dominio=dominio
+        self.__TipoDominio=TipoDominio
+        self.__Contraseña=Contraseña
+        return (self.__idCuenta + "@" + self.__dominio + '.' +self.__TipoDominio )
