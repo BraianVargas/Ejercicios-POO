@@ -1,11 +1,11 @@
 class ViajeroFrecuente:
-    __numViaejero=0
-    __dni=""
-    __nombre=""
-    __apellido=""
-    __millasAcum=0.0
+    __NumViajero=0
+    __DNI=0
+    __Nombre=""
+    __Apellido=""
+    __MillasAcum=0.0
 
-    #---------------------------- Métodos get y set ------------------------------
+# -------------------------------------- Métodos get y set   -----------------------------
     def getNum(self):
         return self.__numViaejero
     def setNum(self, num):
@@ -26,36 +26,19 @@ class ViajeroFrecuente:
     def setApell(self, ape):
         self.__apellido=ape
     def getMillas(self):
-        return self.__millasAcum
+        return float(self.__millasAcum)
     def setMillas(self, millas):
-        try:
-            self.__millasAcum=int(millas)
-        except ValueError:
-            print ("ATENCIÓN: No se pudo asignar correctamente el valor Cantidad de millas")
-
-
-    # -------------------------------------- Métodos solicitados -----------------------------
+        self.__millasAcum=float(millas)
+# -------------------------------------- Métodos solicitados -----------------------------
     def __init__(self, num, dni, nom, apell,millas):
         self.setNum(num),self.setDni(dni), self.setNom(nom)
         self.setApell(apell), self.setMillas(millas)
-
+        
     def cantidadTotaldeMillas(self):
         return str(self.__millasAcum)
 
     def acumularMillas(self,recorridas):
-        self.__millasAcum += recorridas
+        self.__millasAcum = self.__millasAcum + recorridas
         
     def canjearMillas(self,cantidad):
-        if(cantidad <= self.__millasAcum):
-            pass
-            return True
-        else:
-            print("No se puede canjear millas, Ingrese un numero valido")
-            return False
-    # ------------------------------------- Métodos agregados -------------------------------------
-    def MuestraDatos(self):
-        print(self.__numViaejero)
-        print(self.__dni)
-        print(self.__nombre)
-        print(self.__apellido)
-        print(self.__millasAcum)
+        self.__millasAcum = self.__millasAcum - cantidad    

@@ -1,109 +1,93 @@
 from Clase_Viajero import ViajeroFrecuente
 
-import csv
+from Clase_Lista import Lista as Li
 
-import sys
+
+import csv
 
 import os
 
+
 if __name__=='__main__':
-
-    lista=[] 
-
-    millasAcum=0.0
+#   -------------------------------------------- Creacion de Lista desde datos de archivo ----------------------------------------------
+    lista=Li()
     archivo=open('Viajeros.csv')
-    reader=csv.reader(archivo, delimiter=';')
-    cargado=False
-
-
+    reader=csv.reader(archivo,delimiter=';')
+    cargado=True
     for fila in reader:
         if(fila[0]=="NumeroDeViajero"):
             pass
         else:
             try:
-                viajero = ViajeroFrecuente(int(fila[0]),fila[1],fila[2],fila[3],float(fila[4].replace(",",".")))
-                lista.append(viajero)                    #Creación de lista de viajeros
+                viajero = ViajeroFrecuente(int(fila[0]),fila[1],fila[2],fila[3],float(fila[4].replace(',','.')))    # *** Crea una instancia de viajero frecuente que luego agrega a la lista ***
+                lista.AgregaViajero(viajero)                # **** Crea la lista de viajeros en la clase Lista **** 
                 cargado=True
-            except:
-                print("Error al Cargar el archivo. El programa se cerrará")
+            except ValueError:
+                print("ERROR. No se ha podido cargar el archivo. El programa se cerrará")
                 input("Continuar...")
                 cargado=False
                 break
-
+    archivo.close()
+#   -------------------------------------------- Menú de opciones ----------------------------------------------
     if(cargado==True):
-        num=int(input("Ingrese el numero de viajero frecuente: "))   #Ingreso de Número de viajero por teclado.
-        if(num>0 and num<=20):
-            ban=True
-        else:
-            print("Numero de viajero Incorrecto")
-            input("Continuar...")
-        
-        i=0
-        while ban==True:
-            if (i>len(lista)):
-                print("ERROR. Numero de viajero Inexistente.")
-                num=input("Ingrese el numero de viajero frecuente: ")   #Ingreso de Número de viajero por teclado.
-            else:
-                try:
-                    num=int(num)
-                except ValueError:
-                    print ("ATENCIÓN: Debe ingresar un número entero.")
-                    break
-                if(num == lista[i].getNum()):
-                    print("Viajero Encontrado.")
-                    ban=False
-                    input("Continuar...")
-                else:
-                    i+=1
-        print (lista[i].MuestraDatos())
-        # ------------------------ Comienzo de menú ----------------------------------
+        def switch(argument):
+            func=switcher.get(argument,lambda:print('Opcion Incorrecta'))
+            func()
         def opciona():
-            print("La cantiad de millas que posee es: {}" .format(float(lista[i].cantidadTotaldeMillas())))
-            input("Continuar...")
-            os.system('cls')
-        def opcionb():
-            milla = input("Ingrese la cantidad de millas a acumular: ")
-            try:
-                milla = float(milla)
-                lista[i].acumularMillas(milla)
-                print('Se actualizó la cantidad de millas acumuladas, se sumaron {} nuevas millas'.format(milla))
-                input("Continuar...")
-                os.system('cls')
-            except ValueError:
-                print ("ATENCIÓN: Debe ingresar un número entero.")
-        def opcionc():
-            canje=int(input("Ingrese la cantidad de millas a canjear: "))
-            ban=lista[i].canjearMillas(canje)
-            if( ban == True):
-                print('Se actualizó la cantidad de millas acumuladas, se canjeó  un total de {} millas'.format(canje))
-                input("Continuar")
-                os.system('cls')
+            res = lista.ConsultarMillas(numviaj)
+            if(res == -1):
+                print("El viajero no ha sido encontrado.")
+            else:
+                print("El viajero tiene un total de {:.2f} millas ".format(res))
 
+            input("Enter para continuar...")
+            os.system('cls')
+
+        def opcionb():
+            cant=input("Ingrese la cantidad de millas que desea acumular: ")
+            try:
+                cant=float(cant.replace(',','.'))
+                lista.AcumularMillas(numviaj,cant)
+            except ValueError:
+                print ("ERROR en el ingreso de las millas")
+
+            input("Enter para continuar...")
+            os.system('cls')
+
+        def opcionc():
+            cant=input("Ingrese la cantidad de millas que desea canjear: ")
+            try:
+                cant=float(cant.replace(',','.'))
+                lista.CanjearMillas(numviaj,cant)
+            except ValueError:
+                print ("ERROR en el ingreso de las millas")
         def opciond():
             pass
-
         switcher ={
             'a': opciona,
             'b': opcionb,
             'c': opcionc,
             'd': opciond
         }
-        def switch(argument):
-            func=switcher.get(argument,lambda:print('Opcion Incorrecta'))
-            func()
-
+        
         bandera=False
         while not bandera:
-            print ("")
-            print ("a. Consultar Cantidad de millas. ")
-            print ("b. Acumular millas.")
-            print ("c. Canjear millas. ")  
-            print ("d. Salir")
-            opcion=input("Elige una opcion: ")
+            nume=True
+            while nume==True:
+                numviaj=input("Ingrese el numero de un viajero: ")
+                try:
+                    numviaj=int(numviaj)
+                    nume=False
+                except ValueError:
+                    print("Debe ingresar un numero entero.")
+                    input("Presion ENTER para continuar...")
+                    os.system('cls')
+            print("")
+            print("a. Consultar cantidad de millas")
+            print("b. Acumular millas")
+            print("c. Canjear milas")
+            print("d. Salir")
+            opcion=input("Ingrese su opcion: ")
             opcion=opcion.lower()
             switch(opcion)
             bandera= opcion =='d'
-        
-        archivo.close()
-
-        input("Enter para continuar...")
