@@ -6,6 +6,12 @@ class cosecha:
     __peso=None
 
     __tabla = np.empty((45,20))           #Arreglo Bidimensional
+
+    def CereoTabla(self):
+        i=j=0
+        for i in range(45):
+            for j in range(20):
+                self.__tabla[i,j]=0
     
     def __init__(self,id,dia,peso):
         self.__id=id

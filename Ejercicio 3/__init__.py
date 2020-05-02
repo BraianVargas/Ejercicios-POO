@@ -2,14 +2,18 @@ from clase_camion import camion
 
 from clase_cosecha import cosecha
 
+from ClaseListaCamiones import ListaCamiones
+
+from ClaseListaCosecha import ListaCosecha
+
 import csv
 
 import os
 
 if __name__=='__main__':
     
-    listaCamion=[]
-    listaCosecha=[]
+    listaCamion=ListaCamiones()
+    listaCosecha=ListaCosecha()
 
     banCamion=False
     banCosecha=False
@@ -18,58 +22,47 @@ if __name__=='__main__':
     readerCamion=csv.reader(ArchCamion, delimiter=';')
 
     for fila in readerCamion:
-        if(fila[0] !="Identificador"):
-            if( (int(fila[0])>=1) and (int(fila[0])<=20) ):
-                cam= camion(int(fila[0]),fila[1],fila[2],fila[3],float(fila[4].replace(',','.')))
-                listaCamion.append(cam)                                                          #Creación de lista de Camiones
-                banCamion=True
-            else:pass
+        if(fila[0] =="Identificador"):
+            pass
         else:
-            pass    
+            if( (int(fila[0])>=1) and (int(fila[0])<=20) ):
+                try:
+                    cam= camion(int(fila[0]),fila[1],fila[2],fila[3],float(fila[4].replace(',','.')))
+                    listaCamion.AgregaCamion(cam)                                                          #Creación de lista de Camiones
+                    banCamion=True
+                except ValueError:
+                    print("ERROR. No se ha podido cargar el archivo 'Camiones.csv' . El programa se cerrará")
+                    input("Continuar...")
+                    banCamion=False
+                    break
+            else:
+                print("ERROR, Numero de camion invalido.")
 
     ArchCamion.close()              
 #-------------------------------------- Carga archivo "cosecha.csv" --------------------------------------
     ArchCosecha=open('C:/Users/ThinkPad T420/Desktop/Mis cosas/FCEFN/POO/Unidad 2/2020/Practica 2/Ejercicio 3 (Listas Bidimencionales)/cosecha.csv')
     readerCosecha=csv.reader(ArchCosecha, delimiter=';')
     for fila1 in readerCosecha:
-        if(fila1[0]!="Id"):
-            if( (int(fila1[0])>0) and (int(fila1[0])<=20) ) and ( (int(fila1[1])>0) and (int(fila1[1])<=45) ):
-                cos= cosecha(int(fila1[0]),int(fila1[1]),float(fila1[2].replace(',','.')))
-                listaCosecha.append(cos)                                                 #Creación de lista de cosecha
-                banCosecha=True
-            else: pass
-        else:
+        if(fila1[0]=="Id"):
             pass
+        else:
+            if( (int(fila1[0])>0) and (int(fila1[0])<=20) ) and ( (int(fila1[1])>0) and (int(fila1[1])<=45) ):
+                try:
+                    cos= cosecha(int(fila1[0]),int(fila1[1]),float(fila1[2].replace(',','.')))
+                    listaCosecha.AgregaCosecha(cos)                                                 #Creación de lista de cosecha
+                    banCosecha=True
+                except ValueError:
+                    print("ERROR. No se ha podido cargar el archivo 'cosecha.csv' . El programa se cerrará")
+                    input("Continuar...")
+                    banCosecha=False
+                    break
+            else:
+                pass
+                #print("ERROR, identificador de camión o día incorrecto. Revisar archivo 'cosecha.csv'. ")
 
     ArchCosecha.close()
 #-------------------------------------- Carga de arreglo bidimencional -------------------------------------------------
-    i = 0
-    ban=True
-    listaCosecha[i].inicial()
-
-    for i in range(len(listaCosecha)):
-        ban=True
-        idcamion = dia = j = 0 
-        peso = taracamion = neto = 0.0
-
-        idcamion=int(listaCosecha[i].getID())
-        dia=int(listaCosecha[i].getDia())
-        peso=float(listaCosecha[i].getPeso())
-        
-        if(idcamion > 0 and dia > 0) and (idcamion<=20 and dia<=45):
-            while ban and (j<20):
-                if(int(listaCamion[j].getID()) == idcamion):
-                    taracamion=float(listaCamion[j].getTara())          # *** Obtiene la tara del camion ***
-                    j=j+1
-                    ban=False
-                else:
-                    j=j+1
-                    ban=True
-            neto = peso - taracamion                                    # *** Calculo del peso neto descargado ***
-            
-            listaCosecha[i].setTabla(dia-1,idcamion-1,float(neto))          # *** Almacenamiento en lista bidimencional ***
-            idcamion = taracamion = neto = 0
-            i=i+1
+    listaCosecha.CargaTabla(listaCamion)
 #-------------------------------------- Menú de opciones -------------------------------------------------
     if(banCamion==True and banCosecha== True):
         def opcion1():              # ********* Dado el número de identificador de un camión mostrar, la cantidad total de kilos descargados *********
@@ -78,6 +71,7 @@ if __name__=='__main__':
             k=True
             
             idcam=input("Ingrese el identificador del camión (Numero Entero): ")
+
             try:
                 idcam=int(idcam)
                 if (idcam>0) and (idcam<=20):
@@ -99,6 +93,8 @@ if __name__=='__main__':
                     os.system('cls')
             except (ValueError):                                         # *** Capta el error del valor del identificador. Verifica que se ingrese un numero entero como se solicita ***
                 print ("Identificador Incorrecto.")
+
+
         def opcion2():              # ********* Dado un número correspondiente a un día mostrar un listado con formato ********* 
             patente=""
             conductor=""
@@ -112,8 +108,8 @@ if __name__=='__main__':
                     obje=cosecha("","","")
                     print('Patente     Conductor     Cantidad de kilos')
                     for i in range(20):                 # *** Range(20) por la cantidad de camiones existentes en el archivo ***
-                        patente = listaCamion[i].getPatente()
-                        conductor = listaCamion[i].getNombre()
+                        patente = listaCamion.getPatente(i)
+                        conductor = listaCamion.getNombre(i)
                         kilos = float(obje.getTabla(dia-1,i))            # *** i es el identificador del camion ***
                         i = i+1
                         print("{}     {}            {:.2f}" .format(patente,conductor,kilos))
@@ -126,6 +122,8 @@ if __name__=='__main__':
                 print("El dia ingresado es incorrecto. ")
                 input("Enter para continuar...")
                 os.system('cls')
+
+
 
         def opcion3():      # *** SALIR ***
             pass
