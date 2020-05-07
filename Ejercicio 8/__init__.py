@@ -34,7 +34,7 @@ if __name__=='__main__':
 
 
         if(c1!=None and c2!=None):
-            c3=c1+c2
+            c3 = c1+c2
             print("La suma de los conjuntos es: ")
             c3.Mostrar()
             gc.collect()
@@ -95,7 +95,7 @@ if __name__=='__main__':
         try:
             lon=int(lon)
             c2.AgregaCjto(lon)
-            
+
             os.system('cls')
         except ValueError:
             print("Debe ingresar un numero entero.")
@@ -105,19 +105,22 @@ if __name__=='__main__':
         print("Conjunto 2:")
         c2.Mostrar()
 
-
+        
         if(c1!=None and c2!=None):
-            c3 = c1==c2
-            print("La igualdad de los conjuntos es: {}".format(c3))
+            c1==c2
+            if(c1==c2):
+                print("Los conjuntos son iguales")
+            else:
+                print("Los conjuntos no son iguales")
             gc.collect()
+
             del c1,c2
         else: print("No se ha podido realizar la operacion.")
-
+        input("")
 
     def opcion4():
         pass
 
-    
 
     switcher ={
         1: opcion1,
