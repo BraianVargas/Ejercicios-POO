@@ -6,47 +6,23 @@ class FechaHora:
     __minutos=0
     __segundos=0
 
-    def __init__(self,dia=1,mes=1,año=2020,hora=0,minu=0,seg=0):
-        self.__dia=dia
-        self.__mes=mes
-        self.__año=año
-        self.__hora=hora
-        self.__minutos=minu
-        self.__segundos=seg
-        
-        if(self.__segundos>=60):
-            self.__segundos=seg-60
-            if(self.__segundos<0):
-                self.__segundos=self.__segundos*(-1)
-            self.__minutos+=1
-        if(self.__minutos>=60):
-            self.__minutos=minu-60
-            if(self.__minutos<0):
-                self.__minutos=self.__minutos*(-1)
-            self.__hora+=1
-        if(self.__hora>=24):
-            self.__hora=(hora-24)
-            if(self.__hora<0):
-                self.__hora=self.__hora*(-1)
-            self.__dia+=1
-        if(self.__dia>=31 and self.__mes!=2):
-            self.dia=dia-31
-            self.__mes+=1
-            if(self.__mes>12):
-                self.__mes=1
-                self.__año+=1
-        elif(self.__dia==28 and self.__mes==2):             # *** Valida si el año es bisiesto
-            if(self.__año%100==0):          
-                if(self.__año%400==0):
-                    self.dia+=1
-                elif(self.__año%4==0):
-                    self.dia+=1
-                else:
-                    self.dia=1
-                    self.__mes+=1
-                    if(self.__mes>12):
-                        self.__mes=1
-                        self.__año+=1
+    def __init__ (self, dia=1, mes=1,year=2020,hora=0,minutos=0,segundos=0):
+        if((hora<=24 and hora>0)and (minutos<=60 and minutos>=0) and(segundos<=60 and segundos>=0) and (mes>0 and mes<=12)):
+            if((year%400==0)or(year%100!=0 and year%4==0)):
+                listames=[31,29,31,30,31,30,31,31,30,31,30,31]
+            else:
+                listames=[31,28,31,30,31,30,31,31,30,31,30,31]
+            if(dia<=listames[mes-1] and dia > 0):
+                self.__dia = dia
+                self.__mes = mes
+                self.__año = year
+                self.__hora = hora
+                self.__minutos = minutos
+                self.__segundos = segundos
+            else:
+                print("El dia esta fuera de rango")
+        else:
+            print("Hubo un error, verifique hora,minuto,segundos y mes")
 
     def Mostrar(self):
         print("{}/{}/{} {}:{}:{}".format(self.__dia,self.__mes,self.__año,self.__hora,self.__minutos,self.__segundos))
@@ -60,104 +36,96 @@ class FechaHora:
         return self.__segundos
 
 # ----------------------------------------------------------- Suma -----------------------------------------
-    def __add__(self,obj):
+    def __add__ (self,obj):
         dia=self.__dia
         mes=self.__mes
-        año=self.__año
-
-        h=(self.__hora)
-        m=(self.__minutos)
-        s=(self.__segundos)
-        
+        year=self.__año
+        hora=self.__hora
+        minuto=self.__minutos
+        segundo=self.__segundos
         if((self.__año%400==0)or(self.__año%100!=0 and self.__año%4==0)):
             listames=[31,29,31,30,31,30,31,31,30,31,30,31]
         else:
             listames=[31,28,31,30,31,30,31,31,30,31,30,31]
-        
         if(type(obj)==int):
             if(obj>0):
-                dia = dia + obj
-                while(dia>listames[mes-1]):
-                    if(mes==12):
-                        mes=1
-                        año = año + 1
-                    else:
-                        mes = mes + 1
-                return FechaHora(dia,mes,año,h,m,s)
-            else:
-                print("Ingresar un valor positivo")
-        else:
-            h+=obj.getHora()
-            m+=obj.getMinutos()
-            s+=obj.getSeg()
-            
-            if(m>=60):
-                if(m == 60):
-                    m=1
-                    h+=1
-                else:
-                    m -= 60
-                    h += 1
-            if(h>24):
-                h -= 24
-                dia += 1
-            if(dia > listames[mes-1]):
-                dia -= listames[mes-1]
-                mes += 1
-            if(mes > 12):
-                mes -=12
-                año += 1
-
-            return FechaHora(dia,mes,año,h,m,s)
-
-    def __radd__ (self,obj):
-        dia=self.__dia
-        mes=self.__mes
-        año=self.__año
-        
-        h=self.__hora
-        s=self.__segundos
-        m=self.__minutos
-
-        if((self.__año%400==0)or(self.__año%100!=0 and self.__año%4==0)):
-            listames=[31,29,31,30,31,30,31,31,30,31,30,31]
-        else:
-            listames=[31,28,31,30,31,30,31,31,30,31,30,31]
-        if(type(obj)==int):
-            if(obj > -1):
                 dia+=obj
                 while(dia>listames[mes-1]):
                     if(mes==12):
                         mes=1
-                        año+=1
+                        year+=1
                     else:
                         mes+=1
-                return FechaHora(dia,mes,año,h,m,s)
+                return FechaHora(dia,mes,year,hora,minuto,segundo)
             else:
                 print("Ingresar un valor positivo")
         else:
-            h+=obj.getHora()
-            m+=obj.getMinutos()
-            s+=obj.getSeg()
-            
-            if(m>=60):
-                if(m == 60):
-                    m=1
-                    h+=1
+            hora+=obj.getHora()
+            minuto+=obj.getMinutos()
+            segundo+=obj.getSeg()
+            if(minuto>=60):
+                if(minuto==60):
+                    minuto=1
+                    hora+=1
                 else:
-                    m -= 60
-                    h += 1
-            if(h>24):
-                h -= 24
+                    minuto =minuto - 60
+                    hora += 1
+            if(hora>24):
+                hora -= 24
                 dia += 1
             if(dia > listames[mes-1]):
                 dia -= listames[mes-1]
                 mes += 1
             if(mes > 12):
                 mes -=12
-                año += 1
+                year += 1
+            return(FechaHora(dia,mes,year,hora,minuto,segundo))
 
-            return(FechaHora(dia,mes,año,h,m,s))
+    def __radd__ (self,obj):
+        dia=self.__dia
+        hora=self.__hora
+        mes=self.__mes
+        year=self.__año
+        segundo=self.__segundos
+        minuto=self.__minutos
+        if((self.__año%400==0)or(self.__año%100!=0 and self.__año%4==0)):
+            listames=[31,29,31,30,31,30,31,31,30,31,30,31]
+        else:
+            listames=[31,28,31,30,31,30,31,31,30,31,30,31]
+        if(type(obj)==int):
+            if(obj>-1):
+                dia+=obj
+                while(dia>listames[mes-1]):
+                    if(mes==12):
+                        mes=1
+                        year+=1
+                    else:
+                        mes+=1
+                return FechaHora(dia,mes,year,hora,minuto,segundo)
+            else:
+                print("Ingresar un valor positivo")
+        else:
+            hora+=obj.getHora()
+            minuto+=obj.getMinutos()
+            segundo+=obj.getSeg()
+            if(minuto>=60):
+                if(minuto == 60):
+                    minuto=1
+                    hora+=1
+                else:
+                    minuto -= 60
+                    hora += 1
+            if(hora>24):
+                hora -= 24
+                dia += 1
+            if(dia > listames[mes-1]):
+                dia -= listames[mes-1]
+                mes += 1
+            if(mes > 12):
+                mes -=12
+                year += 1
+            return(FechaHora(dia,mes,year,hora,minuto,segundo))
+
 # -------------------------------------------------------------------- Resta ------------------------------------------------
     def __sub__ (self,obj):
         if((self.__año%400==0)or(self.__año%100!=0 and self.__año%4==0)):
@@ -176,7 +144,6 @@ class FechaHora:
                     year+=1
                 else:
                     dia=listames[mes-2]
-                    dia-=1 #BORRAAR
                     mes-=1
             return FechaHora(dia,mes,year,self.__hora,self.__minutos,self.__segundos)
         else:
