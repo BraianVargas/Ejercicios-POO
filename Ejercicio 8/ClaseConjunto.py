@@ -7,6 +7,9 @@ class Conjunto:
     def Agrega(self,elem):
         self.__lista.append(elem)
 
+    def retornaValor (self):
+        return self.__lista
+    
     def AgregaCjto(self, long):
         i=0
         for i in range(long):
@@ -88,22 +91,10 @@ class Conjunto:
             i+=1
         return li
 
-    def __eq__(self,cjto):
-        q=False
-        self.__lista.sort()
-        cjto.__lista.sort()
-
-        if((len(self.__lista))==(len(cjto.__lista))):
-            i=0
-            for i in range(len(self.__lista)):
-                if(self.__lista[i]==cjto.__lista[i]):
-                    q=True
-                else:
-                    q=False
-        else:
-            q=False
-
-        return q
+    def __eq__(self, cjto):
+        if not isinstance(cjto, self.__class__):
+            return False
+        return sorted(self.__lista) == sorted(cjto.__lista)
 
     def Mostrar(self):
         self.__lista.sort()
