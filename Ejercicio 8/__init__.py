@@ -6,8 +6,8 @@ import os
 
 if __name__=='__main__':
     def opcion1():
-        c1=Conjunto(0)
-        c2=Conjunto(0)
+        c1=Conjunto()
+        c2=Conjunto()
         print("")
         print("*** UNION DE CONJUNTOS ***")
         print("*** CONJUNTO 1 ***")
@@ -35,15 +35,14 @@ if __name__=='__main__':
 
         if(c1!=None and c2!=None):
             c3 = c1+c2
-            print("La suma de los conjuntos es: ")
-            c3.Mostrar()
+            print("La union de los conjuntos es: ",c3)
             gc.collect()
-            del c1,c2
         else: print("No se ha podido realizar la operacion.")
+        del c1,c2, c3
 
     def opcion2():        
-        c1=Conjunto(0)
-        c2=Conjunto(0)
+        c1=Conjunto()
+        c2=Conjunto()
         print("")
         print("*** DIFERENCIA DE CONJUNTOS ***")
         print("*** CONJUNTO 1 ***")
@@ -71,18 +70,17 @@ if __name__=='__main__':
 
         if(c1!=None and c2!=None):
             c3=c1-c2
-            print("La suma de los conjuntos es: ")
-            c3.Mostrar()
+            print("La suma de los conjuntos es: ",c3)
             gc.collect()
-            del c1,c2
         else: print("No se ha podido realizar la operacion.")
+        del c1,c2,c3
 
     def opcion3():        
         print("")
         print("*** IGUALDAD DE CONJUNTOS ***")
         print("*** CONJUNTO 1 ***")
         lon=input("Igrese la cantidad de elementos del conjunto: ")
-        c1=Conjunto(0)
+        c1=Conjunto()
         try:
             lon=int(lon)
             c1.AgregaCjto(lon)
@@ -91,7 +89,7 @@ if __name__=='__main__':
             print("Debe ingresar un numero entero.")
         print("*** CONJUNTO 2 ***")
         lon=input("Igrese la cantidad de elementos del conjunto: ")
-        c2=Conjunto(0)
+        c2=Conjunto()
         try:
             lon=int(lon)
             c2.AgregaCjto(lon)
@@ -107,7 +105,6 @@ if __name__=='__main__':
 
         
         if(c1!=None and c2!=None):
-            c1==c2
             if(c1==c2):
                 print("Los conjuntos son iguales")
             else:
