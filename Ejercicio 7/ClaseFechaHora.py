@@ -7,7 +7,7 @@ class FechaHora:
     __segundos=0
 
     def __init__ (self, dia=1, mes=1,year=2020,hora=0,minutos=0,segundos=0):
-        if((hora<=24 and hora>0)and (minutos<=60 and minutos>=0) and(segundos<=60 and segundos>=0) and (mes>0 and mes<=12)):
+        if((hora<=24 and hora>=0)and (minutos<=60 and minutos>=0) and(segundos<=60 and segundos>=0) and (mes>0 and mes<=12)):
             if((year%400==0)or(year%100!=0 and year%4==0)):
                 listames=[31,29,31,30,31,30,31,31,30,31,30,31]
             else:
@@ -63,22 +63,42 @@ class FechaHora:
             hora+=obj.getHora()
             minuto+=obj.getMinutos()
             segundo+=obj.getSeg()
+
+            if(segundo>=60):
+                if(segundo==60):
+                    segundo=0
+                    minuto+=1
+                else:
+                    segundo =segundo - 60
+                    minuto += 1
             if(minuto>=60):
                 if(minuto==60):
-                    minuto=1
+                    minuto=0
                     hora+=1
                 else:
                     minuto =minuto - 60
                     hora += 1
-            if(hora>24):
-                hora -= 24
-                dia += 1
-            if(dia > listames[mes-1]):
-                dia -= listames[mes-1]
-                mes += 1
-            if(mes > 12):
-                mes -=12
-                year += 1
+            if(hora>=24):
+                if(hora==24):
+                    hora=0
+                    dia+=1
+                else:
+                    hora -= 24
+                    dia += 1
+            if(dia >= listames[mes-1]):
+                if(dia==listames[mes-1]):
+                    dia=1
+                    mes+=1
+                else:
+                    dia -= listames[mes-1]
+                    mes += 1
+            if(mes >= 12):
+                if(mes==12):
+                    mes=1
+                    year +=1
+                else:
+                    mes -= 12
+                    year += 1
             return(FechaHora(dia,mes,year,hora,minuto,segundo))
 
     def __radd__ (self,obj):
@@ -88,6 +108,7 @@ class FechaHora:
         year=self.__año
         segundo=self.__segundos
         minuto=self.__minutos
+
         if((self.__año%400==0)or(self.__año%100!=0 and self.__año%4==0)):
             listames=[31,29,31,30,31,30,31,31,30,31,30,31]
         else:
@@ -108,26 +129,68 @@ class FechaHora:
             hora+=obj.getHora()
             minuto+=obj.getMinutos()
             segundo+=obj.getSeg()
+
+            if(segundo>=60):
+                if(segundo==60):
+                    segundo=0
+                    minuto+=1
+                else:
+                    segundo =segundo - 60
+                    minuto += 1
             if(minuto>=60):
-                if(minuto == 60):
-                    minuto=1
+                if(minuto==60):
+                    minuto=0
                     hora+=1
                 else:
-                    minuto -= 60
+                    minuto =minuto - 60
                     hora += 1
-            if(hora>24):
-                hora -= 24
-                dia += 1
-            if(dia > listames[mes-1]):
-                dia -= listames[mes-1]
-                mes += 1
-            if(mes > 12):
-                mes -=12
-                year += 1
+            if(hora>=24):
+                if(hora==60):
+                    hora=0
+                    dia+=1
+                else:
+                    hora -= 24
+                    dia += 1
+            if(dia >= listames[mes-1]):
+                if(dia==listames[mes-1]):
+                    dia=1
+                    mes+=1
+                else:
+                    dia -= listames[mes-1]
+                    mes += 1
+            if(mes >= 12):
+                if(mes==12):
+                    mes=1
+                    year +=1
+                else:
+                    mes -= 12
+                    year += 1
             return(FechaHora(dia,mes,year,hora,minuto,segundo))
 
 # -------------------------------------------------------------------- Resta ------------------------------------------------
     def __sub__ (self,obj):
+        if((self.__año%400==0)or(self.__año%100!=0 and self.__año%4==0)):
+            listames=[31,29,31,30,31,30,31,31,30,31,30,31]
+        else:
+            listames=[31,28,31,30,31,30,31,31,30,31,30,31]
+        if(obj > 0):
+            dia=self.__dia
+            mes=self.__mes
+            year=self.__año
+            dia = dia - obj
+            while(dia<1):
+                if(mes==0):
+                    dia+=31
+                    mes=12
+                    year+=1
+                else:
+                    dia=listames[mes-2]
+                    mes-=1
+            return FechaHora(dia,mes,year,self.__hora,self.__minutos,self.__segundos)
+        else:
+            print("Usted ingreso un numero Real por favor vuelva a ingresar un numero entero positivo")
+    
+    def __rsub__ (self,obj):
         if((self.__año%400==0)or(self.__año%100!=0 and self.__año%4==0)):
             listames=[31,29,31,30,31,30,31,31,30,31,30,31]
         else:
