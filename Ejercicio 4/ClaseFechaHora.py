@@ -74,7 +74,11 @@ class FechaHora:
                 self.__hora+=1
             if(self.__hora>23):
                 self.__hora -= 24
-                self.__dia += 1
+                if((self.__año%400==0)and(self.__año%100!=0 and self.__año%4==0)):
+                    listames=[31,29,31,30,31,30,31,31,30,31,30,31]
+                else:
+                    listames=[31,28,31,30,31,30,31,31,30,31,30,31]
+                    self.__dia += 1
             if(self.__dia > listames[self.__mes-1]):
                 self.__dia -= listames[self.__mes-1]
                 self.__mes += 1
