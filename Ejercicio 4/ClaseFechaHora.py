@@ -7,7 +7,7 @@ class FechaHora:
     __segundos=0
 
     def __init__ (self, dia=1, mes=1,year=2020,hora=0,minutos=0,segundos=0):
-        if((hora<=24 and hora>0)and (minutos<=60 and minutos>=0) and(segundos<=60 and segundos>=0) and (mes>0 and mes<=12)):
+        if((hora<=24 and hora>=0)and (minutos<=60 and minutos>=0) and(segundos<=60 and segundos>=0) and (mes>0 and mes<=12)):
             if((year%400==0)or(year%100!=0 and year%4==0)):
                 listames=[31,29,31,30,31,30,31,31,30,31,30,31]
             else:
