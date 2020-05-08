@@ -61,30 +61,23 @@ class FechaHora:
             print("Cantidad de segundos invalidos")
 
 
-        if(self.__segundos>=60):
-            self.__segundos=0
-            self.__minutos+=1
-        if(self.__minutos>=60):
-            self.__minutos=0
-            self.__hora+=1
-        if(self.__hora>=24):
-            self.__hora=0
-            self.__dia+=1
-        if(self.__dia>=31 and self.__mes!=2):
-            self.__dia=1
-            self.__mes+=1
-            if(self.__mes>12):
-                self.__mes=1
-                self.__año+=1
-        elif(self.__dia==28 and self.__mes==2):             # *** Valida si el año es bisiesto
-            if(self.__año%100==0):          
-                if(self.__año%400==0):
-                    self.__dia+=1
-                elif(self.__año%4==0):
-                    self.__dia+=1
-                else:
-                    self.dia=1
-                    self.__mes+=1
-                    if(self.__mes>12):
-                        self.__mes=1
-                        self.__año+=1
+        if((self.__año%400==0)and(self.__año%100!=0 and self.__año%4==0)):
+            listames=[31,29,31,30,31,30,31,31,30,31,30,31]
+        else:
+            listames=[31,28,31,30,31,30,31,31,30,31,30,31]
+            
+            if(self.__segundos>=60):
+                self.__segundos=0
+                self.__minutos+=1
+            if(self.__minutos>=60):
+                self.__minutos=0
+                self.__hora+=1
+            if(self.__hora>23):
+                self.__hora -= 24
+                self.__dia += 1
+            if(self.__dia > listames[self.__mes-1]):
+                self.__dia -= listames[self.__mes-1]
+                self.__mes += 1
+            if(self.__mes > 12):
+                self.__mes -=12
+                self.__año += 1
